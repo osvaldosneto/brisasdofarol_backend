@@ -2,7 +2,6 @@ package com.osn.locadora.domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +12,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.osn.locadora.domain.enums.TipoIntermedio;
+import com.osn.locadora.domain.enums.TipoLimpeza;
 
 @Entity
 public class Reserva implements Serializable {
@@ -22,14 +22,15 @@ public class Reserva implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private LocalDate now;
-	private Date checkIn;
-	private Date checkOut;
+	private LocalDate checkIn;
+	private LocalDate checkOut;
 	private Integer numeroHospedes;
 	private Integer tipoIntermedio;
 	private double desconto;
 	private double total;
+	private Integer tipoLimpeza;
 
 	@ManyToOne
 	@JoinColumn(name = "hospedagens_id")
@@ -44,8 +45,8 @@ public class Reserva implements Serializable {
 		this.now = LocalDate.now();
 	}
 
-	public Reserva(Date checkIn, Date checkOut, Integer numeroHospedes, TipoIntermedio tipoIntermedio,
-			double desconto) {
+	public Reserva(LocalDate checkIn, LocalDate checkOut, Integer numeroHospedes, TipoIntermedio tipoIntermedio,
+			double desconto, TipoLimpeza tipoLimpeza) {
 		super();
 		this.now = LocalDate.now();
 		this.checkIn = checkIn;
@@ -53,6 +54,7 @@ public class Reserva implements Serializable {
 		this.numeroHospedes = numeroHospedes;
 		this.tipoIntermedio = tipoIntermedio.getCod();
 		this.desconto = desconto;
+		this.tipoLimpeza = tipoLimpeza.getCod();
 	}
 
 	public LocalDate getNow() {
@@ -71,19 +73,19 @@ public class Reserva implements Serializable {
 		this.id = id;
 	}
 
-	public Date getCheckIn() {
+	public LocalDate getCheckIn() {
 		return checkIn;
 	}
 
-	public void setCheckIn(Date checkIn) {
+	public void setCheckIn(LocalDate checkIn) {
 		this.checkIn = checkIn;
 	}
 
-	public Date getCheckOut() {
+	public LocalDate getCheckOut() {
 		return checkOut;
 	}
 
-	public void setCheckOut(Date checkOut) {
+	public void setCheckOut(LocalDate checkOut) {
 		this.checkOut = checkOut;
 	}
 
@@ -101,6 +103,14 @@ public class Reserva implements Serializable {
 
 	public void setTipoIntermedio(TipoIntermedio tipoIntermedio) {
 		this.tipoIntermedio = tipoIntermedio.getCod();
+	}
+
+	public TipoLimpeza getTipoLimpeza() {
+		return TipoLimpeza.toEnum(tipoLimpeza);
+	}
+
+	public void setTipoLimpeza(TipoLimpeza tipoLimpeza) {
+		this.tipoLimpeza = tipoLimpeza.getCod();
 	}
 
 	public double getDesconto() {

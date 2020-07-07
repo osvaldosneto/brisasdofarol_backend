@@ -1,13 +1,13 @@
 package com.osn.locadora.domain.enums;
 
-public enum TipoIntermedio {
+public enum TipoLimpeza {
 
-	AIRBNB(1, "Airbnb"), LOCAL(0, "Local");
+	SIM(1, "Com_Taxa"), NAO(0, "Sem_Taxa");
 
 	private int cod;
 	private String descricao;
 
-	private TipoIntermedio(int cod, String descricao) {
+	private TipoLimpeza(int cod, String descricao) {
 		this.cod = cod;
 		this.descricao = descricao;
 	}
@@ -28,11 +28,11 @@ public enum TipoIntermedio {
 		this.descricao = descricao;
 	}
 
-	public static TipoIntermedio toEnum(Integer tipoIntermedio) {
+	public static TipoLimpeza toEnum(Integer tipoIntermedio) {
 		if (tipoIntermedio == null) {
 			return null;
 		}
-		for (TipoIntermedio tipo : TipoIntermedio.values()) {
+		for (TipoLimpeza tipo : TipoLimpeza.values()) {
 			if (tipoIntermedio.equals(tipo.getCod())) {
 				return tipo;
 			}

@@ -2,6 +2,10 @@ package com.osn.locadora.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.osn.locadora.domain.Hospedagem;
 
 public class HospedagemDTO implements Serializable {
@@ -9,10 +13,17 @@ public class HospedagemDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	
+	@NotEmpty(message="Preenchimento obrigatório")
+	@Length(min=3, max=120, message="O tamanho deve ser entre 3 e 120 caracteres")
 	private String nome;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Integer maximoHospedes;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double valorDiaria;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double valorHospedeExtra;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double taxaLimpeza;
 
 	public HospedagemDTO() {

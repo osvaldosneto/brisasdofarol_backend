@@ -1,6 +1,6 @@
 package com.osn.locadora;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import com.osn.locadora.domain.Estado;
 import com.osn.locadora.domain.Hospedagem;
 import com.osn.locadora.domain.Reserva;
 import com.osn.locadora.domain.enums.TipoIntermedio;
+import com.osn.locadora.domain.enums.TipoLimpeza;
 import com.osn.locadora.repository.CidadeRepository;
 import com.osn.locadora.repository.ClienteRepository;
 import com.osn.locadora.repository.EnderecoRepository;
@@ -53,9 +54,7 @@ public class LocadoraApplication implements CommandLineRunner {
 	@Transactional
 	public void run(String... args) throws Exception {
 
-		// incluindo pedidos e lista de pedidos
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
+		// incluindo pedidos e lista de pedido
 		Estado e1 = new Estado("Santa Catarina");
 		Estado e2 = new Estado("Rio Grando do Sul");
 		Estado e3 = new Estado("São Paulo");
@@ -152,25 +151,31 @@ public class LocadoraApplication implements CommandLineRunner {
 		Cliente cli10 = new Cliente("Pinto Silva", "pinto@ymail.com", end12);
 		cli10.getTelefones().add("3214-5555");
 		end12.setCliente(cli10);
+		
+		LocalDate d1 = LocalDate.of(2020, 1, 8);
+		LocalDate d2 = LocalDate.of(2020, 1, 10);
+		LocalDate d3 = LocalDate.of(2020, 2, 8);
+		LocalDate d4 = LocalDate.of(2020, 3, 8);
+		LocalDate d5 = LocalDate.of(2020, 3, 12);
 
-		Reserva res1 = new Reserva(sdf.parse("10/09/2019"), sdf.parse("15/09/2019"), 2, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res2 = new Reserva(sdf.parse("10/10/2019"), sdf.parse("15/10/2019"), 1, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res3 = new Reserva(sdf.parse("10/11/2019"), sdf.parse("15/11/2019"), 4, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res4 = new Reserva(sdf.parse("10/12/2019"), sdf.parse("15/12/2019"), 4, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res5 = new Reserva(sdf.parse("10/01/2020"), sdf.parse("15/01/2020"), 3, TipoIntermedio.LOCAL, 0.00);
-		Reserva res6 = new Reserva(sdf.parse("10/02/2020"), sdf.parse("15/02/2020"), 3, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res7 = new Reserva(sdf.parse("10/03/2020"), sdf.parse("15/03/2020"), 2, TipoIntermedio.LOCAL, 0.00);
-		Reserva res8 = new Reserva(sdf.parse("10/04/2020"), sdf.parse("15/04/2020"), 2, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res9 = new Reserva(sdf.parse("10/05/2020"), sdf.parse("15/05/2020"), 2, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res10 = new Reserva(sdf.parse("10/06/2020"), sdf.parse("15/06/2020"), 4, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res11 = new Reserva(sdf.parse("10/07/2020"), sdf.parse("15/07/2020"), 1, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res12 = new Reserva(sdf.parse("10/08/2020"), sdf.parse("15/08/2020"), 2, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res13 = new Reserva(sdf.parse("10/09/2020"), sdf.parse("15/09/2020"), 1, TipoIntermedio.LOCAL, 0.00);
-		Reserva res14 = new Reserva(sdf.parse("10/10/2020"), sdf.parse("15/10/2020"), 1, TipoIntermedio.LOCAL, 0.00);
-		Reserva res15 = new Reserva(sdf.parse("10/11/2020"), sdf.parse("15/11/2020"), 4, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res16 = new Reserva(sdf.parse("10/12/2020"), sdf.parse("15/12/2020"), 3, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res17 = new Reserva(sdf.parse("10/01/2020"), sdf.parse("15/01/2020"), 2, TipoIntermedio.AIRBNB, 0.00);
-		Reserva res18 = new Reserva(sdf.parse("10/02/2020"), sdf.parse("15/02/2020"), 3, TipoIntermedio.AIRBNB, 0.00);
+		Reserva res1 = new Reserva(d1, d2, 2, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res2 = new Reserva(d1, d2 , 1, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res3 = new Reserva(d2, d3, 4, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res4 = new Reserva(d2, d3, 4, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.NAO);
+		Reserva res5 = new Reserva(d4, d5, 3, TipoIntermedio.LOCAL, 0.00, TipoLimpeza.SIM);
+		Reserva res6 = new Reserva(d4, d5, 3, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res7 = new Reserva(d4, d5, 2, TipoIntermedio.LOCAL, 0.00, TipoLimpeza.NAO);
+		Reserva res8 = new Reserva(d4, d5, 2, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res9 = new Reserva(d2, d3, 2, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.NAO);
+		Reserva res10 = new Reserva(d2, d3, 4, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res11 = new Reserva(d2, d3, 1, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.NAO);
+		Reserva res12 = new Reserva(d1, d2, 2, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.NAO);
+		Reserva res13 = new Reserva(d1, d2, 1, TipoIntermedio.LOCAL, 0.00, TipoLimpeza.NAO);
+		Reserva res14 = new Reserva(d1, d2, 1, TipoIntermedio.LOCAL, 0.00, TipoLimpeza.NAO);
+		Reserva res15 = new Reserva(d4, d5, 4, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res16 = new Reserva(d4, d5, 3, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res17 = new Reserva(d4, d5, 2, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
+		Reserva res18 = new Reserva(d4, d5, 3, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.NAO);
 
 		res1.setHospedagem(h1);
 		res2.setHospedagem(h1);

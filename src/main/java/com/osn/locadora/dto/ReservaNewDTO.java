@@ -2,35 +2,55 @@ package com.osn.locadora.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 public class ReservaNewDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-
+	
+	@NotEmpty(message="Preenchimento obrigatório")
+	@Length(min=5, max=120, message="O tamanho deve ser entre 5 e 120 caracteres")
 	private String nome;
+	@NotEmpty(message="Preenchimento obrigatório")
+	@Email(message="Email inválido")
 	private String email;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String telefone1;
 	private String telefone3;
 	private String telefone2;
-
+	
 	private String logradouro;
 	private String numero;
 	private String complemento;
 	private String bairro;
 	private String cep;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Long idCidade;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Long idHospedagem;
-
+	
+	@NotEmpty(message="Preenchimento obrigatório")
 	private LocalDate now;
-	private Date checkIn;
-	private Date checkOut;
+	@NotEmpty(message="Preenchimento obrigatório")
+	private String checkIn;
+	@NotEmpty(message="Preenchimento obrigatório")
+	private String checkOut;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Integer numeroHospedes;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Integer tipoIntermedio;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double desconto;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double total;
+	@NotEmpty(message="Preenchimento obrigatório")
+	private Integer tipoLimpeza;
 
 	public ReservaNewDTO() {
 		this.now = LocalDate.now();
@@ -148,19 +168,19 @@ public class ReservaNewDTO implements Serializable {
 		this.now = now;
 	}
 
-	public Date getCheckIn() {
+	public String getCheckIn() {
 		return checkIn;
 	}
 
-	public void setCheckIn(Date checkIn) {
+	public void setCheckIn(String checkIn) {
 		this.checkIn = checkIn;
 	}
 
-	public Date getCheckOut() {
+	public String getCheckOut() {
 		return checkOut;
 	}
 
-	public void setCheckOut(Date checkOut) {
+	public void setCheckOut(String checkOut) {
 		this.checkOut = checkOut;
 	}
 
@@ -194,6 +214,14 @@ public class ReservaNewDTO implements Serializable {
 
 	public void setTotal(double total) {
 		this.total = total;
+	}
+
+	public Integer getTipoLimpeza() {
+		return tipoLimpeza;
+	}
+
+	public void setTipoLimpeza(Integer tipoLimpeza) {
+		this.tipoLimpeza = tipoLimpeza;
 	}
 
 }

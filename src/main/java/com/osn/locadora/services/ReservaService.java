@@ -1,5 +1,8 @@
 package com.osn.locadora.services;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,7 @@ import com.osn.locadora.domain.Cliente;
 import com.osn.locadora.domain.Hospedagem;
 import com.osn.locadora.domain.Reserva;
 import com.osn.locadora.domain.enums.TipoIntermedio;
+import com.osn.locadora.domain.enums.TipoLimpeza;
 import com.osn.locadora.dto.ClienteNewDTO;
 import com.osn.locadora.dto.ReservaDTO;
 import com.osn.locadora.dto.ReservaNewDTO;
@@ -51,24 +55,30 @@ public class ReservaService {
 	}
 
 	public Reserva fromNewDTO(ReservaNewDTO objNewDTO) {
+
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 		Hospedagem hospedagem = hospedagemService.find(objNewDTO.getIdHospedagem());
 
 		ClienteNewDTO clienteNewDTO = new ClienteNewDTO(null, objNewDTO.getNome(), objNewDTO.getEmail(),
 				objNewDTO.getTelefone1(), objNewDTO.getTelefone3(), objNewDTO.getTelefone2(), objNewDTO.getLogradouro(),
 				objNewDTO.getNumero(), objNewDTO.getComplemento(), objNewDTO.getBairro(), objNewDTO.getCep(),
 				objNewDTO.getIdCidade());
+
 		Cliente cliente = clienteService.fromNewDTO(clienteNewDTO);
 
-		Reserva obj = new Reserva(objNewDTO.getCheckIn(), objNewDTO.getCheckOut(), objNewDTO.getNumeroHospedes(),
-				TipoIntermedio.toEnum(objNewDTO.getTipoIntermedio()), objNewDTO.getDesconto());
+		Reserva obj = new Reserva(LocalDate.parse(objNewDTO.getCheckIn(), formatador),
+				LocalDate.parse(objNewDTO.getCheckOut(), formatador), objNewDTO.getNumeroHospedes(),
+				TipoIntermedio.toEnum(objNewDTO.getTipoIntermedio()), objNewDTO.getDesconto(),
+				TipoLimpeza.toEnum(objNewDTO.getTipoLimpeza()));
 
 		obj.setCliente(cliente);
 		obj.setHospedagem(hospedagem);
+		obj.setTotal(this.calculoTotal(obj));
 		hospedagem.getReservas().add(obj);
 		cliente.getReservas().add(obj);
 
 		return obj;
-
 	}
 
 	@Transactional
@@ -80,17 +90,42 @@ public class ReservaService {
 	}
 
 	public Reserva fromDTO(@Valid ReservaDTO objDTO) {
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		Cliente cliente = clienteService.find(objDTO.getIdCliente());
 		Hospedagem hospedagem = hospedagemService.find(objDTO.getIdHospedagem());
-		Reserva obj = new Reserva( objDTO.getCheckIn(), objDTO.getCheckOut(), objDTO.getNumeroHospedes(),
-				TipoIntermedio.toEnum(objDTO.getTipoIntermedio()), objDTO.getDesconto());
+
+		Reserva obj = new Reserva(LocalDate.parse(objDTO.getCheckIn(), formatador),
+				LocalDate.parse(objDTO.getCheckOut(), formatador), objDTO.getNumeroHospedes(),
+				TipoIntermedio.toEnum(objDTO.getTipoIntermedio()), objDTO.getDesconto(),
+				TipoLimpeza.toEnum(objDTO.getTipoLimpeza()));
 		obj.setHospedagem(hospedagem);
+		obj.setTotal(this.calculoTotal(obj));
 		hospedagem.getReservas().add(obj);
 		obj.setCliente(cliente);
 		cliente.getReservas().add(obj);
+
 		return obj;
 	}
+
+	private double calculoTotal(Reserva reserva) {
+		long diasHospedado = ChronoUnit.DAYS.between(reserva.getCheckIn(), reserva.getCheckOut());
+		double total;
 	
+		if (reserva.getNumeroHospedes() > 2) {
+			total = (reserva.getHospedagem().getValorDiaria()
+					+ (reserva.getHospedagem().getValorHospedeExtra() * (reserva.getNumeroHospedes() - 2)))
+					* diasHospedado;
+		} else {
+			total = (reserva.getHospedagem().getValorDiaria() * diasHospedado);
+		}
+		
+		if(reserva.getTipoLimpeza().getCod() == 1) {
+			total += reserva.getHospedagem().getTaxaLimpeza();
+		}
+
+		return total-reserva.getDesconto();
+	}
+
 	@Transactional
 	public Reserva insertNova(Reserva obj) {
 		obj.setId(null);
@@ -99,12 +134,12 @@ public class ReservaService {
 		hospedagemService.update(obj.getHospedagem());
 		return obj;
 	}
-	
+
 	public Page<Reserva> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
-	
+
 	public void delete(Long id) {
 		find(id);
 		try {

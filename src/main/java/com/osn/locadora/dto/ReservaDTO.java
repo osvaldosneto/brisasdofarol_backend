@@ -2,7 +2,10 @@ package com.osn.locadora.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
+import javax.validation.constraints.NotEmpty;
 
 import com.osn.locadora.domain.Reserva;
 
@@ -11,17 +14,29 @@ public class ReservaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private LocalDate now;
-	private Date checkIn;
-	private Date checkOut;
+	@NotEmpty(message="Preenchimento obrigatório")
+	private String checkIn;
+	@NotEmpty(message="Preenchimento obrigatório")
+	private String checkOut;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Integer numeroHospedes;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Integer tipoIntermedio;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double desconto;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private double total;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String cliente;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Long idCliente;
 	private String hospedagem;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private Long idHospedagem;
+	@NotEmpty(message="Preenchimento obrigatório")
+	private Integer tipoLimpeza;
 
 	public ReservaDTO() {
 
@@ -30,16 +45,18 @@ public class ReservaDTO implements Serializable {
 	public ReservaDTO(Reserva reserva) {
 		this.id = reserva.getId();
 		this.now = reserva.getNow();
-		this.checkIn = reserva.getCheckIn();
-		this.checkOut = reserva.getCheckOut();
+		this.checkIn = reserva.getCheckIn().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+		this.checkOut = reserva.getCheckOut().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
 		this.numeroHospedes = reserva.getNumeroHospedes();
 		this.tipoIntermedio = reserva.getTipoIntermedio().getCod();
 		this.desconto = reserva.getDesconto();
-		this.total = reserva.getTotal();
 		this.cliente = reserva.getCliente().getNome();
 		this.idCliente = reserva.getCliente().getId();
 		this.hospedagem = reserva.getHospedagem().getNome();
 		this.idHospedagem = reserva.getHospedagem().getId();
+		this.total = reserva.getTotal();
+		this.tipoLimpeza = reserva.getTipoLimpeza().getCod();
+
 	}
 
 	public Long getId() {
@@ -58,19 +75,19 @@ public class ReservaDTO implements Serializable {
 		this.now = now;
 	}
 
-	public Date getCheckIn() {
+	public String getCheckIn() {
 		return checkIn;
 	}
 
-	public void setCheckIn(Date checkIn) {
+	public void setCheckIn(String checkIn) {
 		this.checkIn = checkIn;
 	}
 
-	public Date getCheckOut() {
+	public String getCheckOut() {
 		return checkOut;
 	}
 
-	public void setCheckOut(Date checkOut) {
+	public void setCheckOut(String checkOut) {
 		this.checkOut = checkOut;
 	}
 
@@ -136,6 +153,14 @@ public class ReservaDTO implements Serializable {
 
 	public void setIdHospedagem(Long idHospedagem) {
 		this.idHospedagem = idHospedagem;
+	}
+
+	public Integer getTipoLimpeza() {
+		return tipoLimpeza;
+	}
+
+	public void setTipoLimpeza(Integer tipoLimpeza) {
+		this.tipoLimpeza = tipoLimpeza;
 	}
 
 }
