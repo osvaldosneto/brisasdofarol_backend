@@ -1,26 +1,28 @@
 package com.osn.locadora.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.osn.locadora.services.validation.ReservaInsert;
+
+@ReservaInsert
 public class ReservaNewDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	@Length(min=5, max=120, message="O tamanho deve ser entre 5 e 120 caracteres")
 	private String nome;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	@Email(message="Email inválido")
 	private String email;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private String telefone1;
 	private String telefone3;
 	private String telefone2;
@@ -30,30 +32,26 @@ public class ReservaNewDTO implements Serializable {
 	private String complemento;
 	private String bairro;
 	private String cep;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private Long idCidade;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private Long idHospedagem;
 	
-	@NotEmpty(message="Preenchimento obrigatório")
-	private LocalDate now;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private String checkIn;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private String checkOut;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private Integer numeroHospedes;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private Integer tipoIntermedio;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private double desconto;
-	@NotEmpty(message="Preenchimento obrigatório")
-	private double total;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message="Preenchimento obrigatório")
 	private Integer tipoLimpeza;
 
 	public ReservaNewDTO() {
-		this.now = LocalDate.now();
+
 	}
 
 	public Long getId() {
@@ -160,14 +158,6 @@ public class ReservaNewDTO implements Serializable {
 		this.idHospedagem = idHospedagem;
 	}
 
-	public LocalDate getNow() {
-		return now;
-	}
-
-	public void setNow(LocalDate now) {
-		this.now = now;
-	}
-
 	public String getCheckIn() {
 		return checkIn;
 	}
@@ -206,14 +196,6 @@ public class ReservaNewDTO implements Serializable {
 
 	public void setDesconto(double desconto) {
 		this.desconto = desconto;
-	}
-
-	public double getTotal() {
-		return total;
-	}
-
-	public void setTotal(double total) {
-		this.total = total;
 	}
 
 	public Integer getTipoLimpeza() {

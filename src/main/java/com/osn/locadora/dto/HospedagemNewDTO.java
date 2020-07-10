@@ -3,43 +3,51 @@ package com.osn.locadora.dto;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
 public class HospedagemNewDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	@NotEmpty(message="Preenchimento obrigatório")
-	@Length(min=3, max=120, message="O tamanho deve ser entre 3 e 120 caracteres")
+
+	private Long id;
+
+	@NotNull(message = "Preenchimento obrigatório")
+	@Length(min = 3, max = 120, message = "O tamanho deve ser entre 3 e 120 caracteres")
 	private String nome;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message = "Preenchimento obrigatório")
 	private Integer maximoHospedes;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message = "Preenchimento obrigatório")
 	private double valorDiaria;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message = "Preenchimento obrigatório")
 	private double valorHospedeExtra;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message = "Preenchimento obrigatório")
 	private double taxaLimpeza;
-	
-	@NotEmpty(message="Preenchimento obrigatório")
-	@Length(min=5, max=120, message="O tamanho deve ser entre 5 e 120 caracteres")
+
+	@NotNull(message = "Preenchimento obrigatório")
+	@Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
 	private String logradouro;
 	private String numero;
 	private String complemento;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotNull(message = "Preenchimento obrigatório")
 	private String bairro;
-	@NotEmpty(message="Preenchimento obrigatório")
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String cep;
-	
-	@NotEmpty(message="Preenchimento obrigatório")
-	private Long cidadeId;
 
-	@NotEmpty(message="Preenchimento obrigatório")
-	private Long estadoId;
+	@NotNull(message = "Preenchimento obrigatório")
+	private Long cidadeId;
 
 	public HospedagemNewDTO() {
 
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -128,14 +136,6 @@ public class HospedagemNewDTO implements Serializable {
 
 	public void setCidadeId(Long cidade_id) {
 		this.cidadeId = cidade_id;
-	}
-
-	public Long getEstadoId() {
-		return estadoId;
-	}
-
-	public void setEstadoId(Long estado_id) {
-		this.estadoId = estado_id;
 	}
 
 }

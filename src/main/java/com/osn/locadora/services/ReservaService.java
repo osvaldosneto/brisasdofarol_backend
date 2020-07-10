@@ -3,6 +3,7 @@ package com.osn.locadora.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ import com.osn.locadora.domain.enums.TipoLimpeza;
 import com.osn.locadora.dto.ClienteNewDTO;
 import com.osn.locadora.dto.ReservaDTO;
 import com.osn.locadora.dto.ReservaNewDTO;
+import com.osn.locadora.dto.ReservaUpdateDTO;
 import com.osn.locadora.repository.ReservaRepository;
 import com.osn.locadora.services.exceptions.DataIntegrityException;
 
@@ -55,45 +57,57 @@ public class ReservaService {
 	}
 
 	public Reserva fromNewDTO(ReservaNewDTO objNewDTO) {
-
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-		Hospedagem hospedagem = hospedagemService.find(objNewDTO.getIdHospedagem());
-
+		Hospedagem hospedagem = hospedagemService.find(objNewDTO.getIdHospedagem());	
+		for (LocalDate ld = LocalDate.parse(objNewDTO.getCheckIn(), formatador);
+			ld.isBefore(LocalDate.parse(objNewDTO.getCheckOut(), formatador)); ld = ld.plusDays(1)) {
+			hospedagem.getListaDatas().add(ld);
+		}
 		ClienteNewDTO clienteNewDTO = new ClienteNewDTO(null, objNewDTO.getNome(), objNewDTO.getEmail(),
 				objNewDTO.getTelefone1(), objNewDTO.getTelefone3(), objNewDTO.getTelefone2(), objNewDTO.getLogradouro(),
 				objNewDTO.getNumero(), objNewDTO.getComplemento(), objNewDTO.getBairro(), objNewDTO.getCep(),
 				objNewDTO.getIdCidade());
-
 		Cliente cliente = clienteService.fromNewDTO(clienteNewDTO);
-
 		Reserva obj = new Reserva(LocalDate.parse(objNewDTO.getCheckIn(), formatador),
 				LocalDate.parse(objNewDTO.getCheckOut(), formatador), objNewDTO.getNumeroHospedes(),
 				TipoIntermedio.toEnum(objNewDTO.getTipoIntermedio()), objNewDTO.getDesconto(),
 				TipoLimpeza.toEnum(objNewDTO.getTipoLimpeza()));
-
 		obj.setCliente(cliente);
 		obj.setHospedagem(hospedagem);
 		obj.setTotal(this.calculoTotal(obj));
 		hospedagem.getReservas().add(obj);
 		cliente.getReservas().add(obj);
-
 		return obj;
 	}
 
-	@Transactional
-	public Reserva insert(Reserva obj) {
-		obj.setId(null);
-		obj = repo.save(obj);
-		clienteService.insert(obj.getCliente());
+	public Reserva fromNewDTOUpdate(@Valid ReservaUpdateDTO objUpdateDTO, Long id) {
+		Reserva obj = find(id);
+		Hospedagem hospedagem = obj.getHospedagem();
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		for (LocalDate ld = LocalDate.parse(objUpdateDTO.getCheckIn(), formatador); ld
+				.isBefore(LocalDate.parse(objUpdateDTO.getCheckOut(), formatador)); ld = ld.plusDays(1)) {
+			hospedagem.getListaDatas().add(ld);
+		}
+		obj.setHospedagem(hospedagem);
+		obj.setCheckIn(LocalDate.parse(objUpdateDTO.getCheckIn(), formatador));
+		obj.setCheckOut(LocalDate.parse(objUpdateDTO.getCheckOut(), formatador));
+		obj.setDesconto(objUpdateDTO.getDesconto());
+		obj.setNow(LocalDate.now());
+		obj.setNumeroHospedes(objUpdateDTO.getNumeroHospedes());
+		obj.setTipoIntermedio(TipoIntermedio.toEnum(objUpdateDTO.getTipoIntermedio()));
+		obj.setTipoLimpeza(TipoLimpeza.toEnum(objUpdateDTO.getTipoLimpeza()));
+		obj.setTotal(this.calculoTotal(obj));
 		return obj;
 	}
 
-	public Reserva fromDTO(@Valid ReservaDTO objDTO) {
+	public Reserva fromDTO(@Valid ReservaDTO objDTO) {	
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		Cliente cliente = clienteService.find(objDTO.getIdCliente());
 		Hospedagem hospedagem = hospedagemService.find(objDTO.getIdHospedagem());
-
+		for (LocalDate ld = LocalDate.parse(objDTO.getCheckIn(), formatador); ld
+				.isBefore(LocalDate.parse(objDTO.getCheckOut(), formatador)); ld = ld.plusDays(1)) {
+			hospedagem.getListaDatas().add(ld);
+		}
 		Reserva obj = new Reserva(LocalDate.parse(objDTO.getCheckIn(), formatador),
 				LocalDate.parse(objDTO.getCheckOut(), formatador), objDTO.getNumeroHospedes(),
 				TipoIntermedio.toEnum(objDTO.getTipoIntermedio()), objDTO.getDesconto(),
@@ -103,14 +117,12 @@ public class ReservaService {
 		hospedagem.getReservas().add(obj);
 		obj.setCliente(cliente);
 		cliente.getReservas().add(obj);
-
 		return obj;
 	}
 
 	private double calculoTotal(Reserva reserva) {
 		long diasHospedado = ChronoUnit.DAYS.between(reserva.getCheckIn(), reserva.getCheckOut());
 		double total;
-	
 		if (reserva.getNumeroHospedes() > 2) {
 			total = (reserva.getHospedagem().getValorDiaria()
 					+ (reserva.getHospedagem().getValorHospedeExtra() * (reserva.getNumeroHospedes() - 2)))
@@ -118,21 +130,10 @@ public class ReservaService {
 		} else {
 			total = (reserva.getHospedagem().getValorDiaria() * diasHospedado);
 		}
-		
-		if(reserva.getTipoLimpeza().getCod() == 1) {
+		if (reserva.getTipoLimpeza().getCod() == 1) {
 			total += reserva.getHospedagem().getTaxaLimpeza();
 		}
-
-		return total-reserva.getDesconto();
-	}
-
-	@Transactional
-	public Reserva insertNova(Reserva obj) {
-		obj.setId(null);
-		obj = repo.save(obj);
-		clienteService.update(obj.getCliente());
-		hospedagemService.update(obj.getHospedagem());
-		return obj;
+		return total - reserva.getDesconto();
 	}
 
 	public Page<Reserva> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
@@ -146,8 +147,53 @@ public class ReservaService {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException(
-					"Não é possível exclir o cliente, verifique se existe dependencia em anexo.");
+					"Não é possível exclir a reserva, verifique se existe dependencia em anexo.");
 		}
+	}
+
+	@Transactional
+	public Reserva insertNova(Reserva obj) {
+		obj.setId(null);
+		obj = repo.save(obj);
+		clienteService.update(obj.getCliente());
+		hospedagemService.update(obj.getHospedagem());
+		return obj;
+	}
+
+	@Transactional
+	public Reserva update(Reserva obj) {
+		Reserva objUpdate = find(obj.getId());
+		objUpdate.setCheckIn(obj.getCheckIn());
+		objUpdate.setCheckOut(obj.getCheckOut());
+		objUpdate.setCliente(obj.getCliente());
+		objUpdate.setDesconto(obj.getDesconto());
+		objUpdate.setHospedagem(obj.getHospedagem());
+		objUpdate.setId(obj.getId());
+		objUpdate.setNow(LocalDate.now());
+		objUpdate.setNumeroHospedes(obj.getNumeroHospedes());
+		objUpdate.setTipoIntermedio(obj.getTipoIntermedio());
+		objUpdate.setTipoLimpeza(obj.getTipoLimpeza());
+		objUpdate.setTotal(this.calculoTotal(obj));	
+		return repo.save(objUpdate);
+	}
+
+	@Transactional
+	public Reserva insert(Reserva obj) {
+		obj.setId(null);
+		obj = repo.save(obj);
+		clienteService.insert(obj.getCliente());
+		return obj;
+	}
+	
+	public void updateHospedagensDiarias(Long id) {
+		Reserva obj = find(id);
+		LocalDate checkIn = obj.getCheckIn();
+		LocalDate checkOut = obj.getCheckOut();
+		List<LocalDate> listaRemover = new ArrayList<>();
+		for (LocalDate ld = checkIn; ld.isBefore(checkOut); ld = ld.plusDays(1)) {
+			listaRemover.add(ld);
+		}
+		hospedagemService.atualizarLista(listaRemover, obj.getHospedagem());
 	}
 
 }

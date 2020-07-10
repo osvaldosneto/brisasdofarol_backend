@@ -35,7 +35,7 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository endRepo;
-    
+
 	public Cliente find(Long id) {
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new com.osn.locadora.services.exceptions.ObjectNotFoundException(
@@ -47,59 +47,21 @@ public class ClienteService {
 	}
 
 	public Cliente fromNewDTO(ClienteNewDTO objNewDTO) {
-		Cidade cidade = cidadeService.find(objNewDTO.getCidadeId());
-		Cliente obj = new Cliente();
-		Endereco end = new Endereco();
-		end.setBairro(objNewDTO.getBairro());
-		end.setCep(objNewDTO.getCep());
-		end.setLogradouro(objNewDTO.getLogradouro());
-		end.setNumero(objNewDTO.getNumero());
-		end.setComplemento(objNewDTO.getComplemento());
-		end.setCidade(cidade);
-		obj.setNome(objNewDTO.getNome());
-		obj.setEmail(objNewDTO.getEmail());
-		obj.setEndereco(end);
+		Cidade cidade = cidadeService.find(objNewDTO.getCidadeId());	
+		Endereco end = new Endereco(objNewDTO.getLogradouro(), objNewDTO.getNumero(), objNewDTO.getComplemento(), objNewDTO.getBairro(),
+				objNewDTO.getCep(), cidade);	
+		Cliente obj = new Cliente(objNewDTO.getNome(), objNewDTO.getEmail(), end);
 		obj.getTelefones().add(objNewDTO.getTelefone1());
-
+	
 		if (objNewDTO.getTelefone2() != null) {
 			obj.getTelefones().add(objNewDTO.getTelefone2());
 		}
 		if (objNewDTO.getTelefone3() != null) {
 			obj.getTelefones().add(objNewDTO.getTelefone3());
 		}
-
-		return obj;
-	}
-
-	public Cliente fromNewDTOUpdate(ClienteNewDTO objNewDTO, Long id) {
-		Set<String> telefones = new HashSet<>();
-		Cliente obj = find(id);
-
-		Cidade cidade = cidadeService.find(objNewDTO.getCidadeId());
-		Endereco endereco = obj.getEndereco();
-		endereco.setCidade(cidade);
-		endereco.setLogradouro(objNewDTO.getNome());
-		endereco.setBairro(objNewDTO.getBairro());
-		endereco.setCep(objNewDTO.getCep());
-		endereco.setNumero(objNewDTO.getNumero());
-		endereco.setComplemento(objNewDTO.getComplemento());
-		endereco.setCliente(obj);
-
-		telefones.add(objNewDTO.getTelefone1());
-
-		if (objNewDTO.getTelefone2() != null) {
-			telefones.add(objNewDTO.getTelefone2());
-		}
-		if (objNewDTO.getTelefone3() != null) {
-			telefones.add(objNewDTO.getTelefone2());
-		}
-
-		obj.setId(id);
-		obj.setTelefones(telefones);
-		obj.setNome(objNewDTO.getNome());
-		obj.setEmail(objNewDTO.getEmail());
-		obj.setEndereco(endereco);
-
+		
+		end.setCliente(obj);
+		
 		return obj;
 	}
 
@@ -128,11 +90,42 @@ public class ClienteService {
 		cliente.setEmail(objDTO.getEmail());
 		return cliente;
 	}
+	
+	public Cliente fromDTO(@Valid ClienteNewDTO objNewDTO, Long id) {
+		Set<String> telefones = new HashSet<>();
+		Cidade cidade = cidadeService.find(objNewDTO.getCidadeId());
+		Cliente cliente = find(id);
+		
+		Endereco endereco = cliente.getEndereco();
+		endereco.setCidade(cidade);
+		endereco.setBairro(objNewDTO.getBairro());
+		endereco.setCep(objNewDTO.getCep());
+		endereco.setComplemento(objNewDTO.getComplemento());
+		endereco.setLogradouro(objNewDTO.getLogradouro());
+		endereco.setNumero(objNewDTO.getNumero());
+		
+		cliente.setEndereco(endereco);
+		cliente.setEmail(objNewDTO.getEmail());
+		cliente.setNome(objNewDTO.getNome());
+		
+		telefones.add(objNewDTO.getTelefone1());
+		if (objNewDTO.getTelefone2() != null) {
+			telefones.add(objNewDTO.getTelefone2());
+		}
+		if (objNewDTO.getTelefone3() != null) {
+			telefones.add(objNewDTO.getTelefone3());
+		}
+		cliente.setTelefones(telefones);
+		
+		return cliente;
+	}
 
-	@Transactional
 	public Cliente update(Cliente obj) {
-		Cliente updateCliente = find(obj.getId());
-		return repo.save(updateCliente);
+		
+		obj.setId(obj.getId());
+		obj = repo.save(obj);
+		endRepo.save(obj.getEndereco());
+		return repo.save(obj);
 	}
 
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {

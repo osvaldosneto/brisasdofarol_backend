@@ -1,10 +1,13 @@
 package com.osn.locadora.domain;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,8 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tb_hospedagens")
 public class Hospedagem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,12 +31,15 @@ public class Hospedagem implements Serializable {
 	private double valorDiaria;
 	private double valorHospedeExtra;
 	private double taxaLimpeza;
+	@ElementCollection
+	@CollectionTable(name = "datas")
+	private List<LocalDate> listaDatas = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_id")
 	private Endereco endereco;
 
-	@OneToMany(mappedBy = "hospedagem", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "hospedagem")
 	private List<Reserva> reservas = new ArrayList<>();
 
 	public Hospedagem() {
@@ -47,6 +55,7 @@ public class Hospedagem implements Serializable {
 		this.valorHospedeExtra = valorHospedeExtra;
 		this.taxaLimpeza = taxaLimpeza;
 		this.endereco = endereco;
+
 	}
 
 	public Long getId() {
@@ -113,6 +122,14 @@ public class Hospedagem implements Serializable {
 		this.reservas = reservas;
 	}
 
+	public List<LocalDate> getListaDatas() {
+		return listaDatas;
+	}
+
+	public void setListaDatas(List<LocalDate> listaDatas) {
+		this.listaDatas = listaDatas;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -137,7 +154,5 @@ public class Hospedagem implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 
 }

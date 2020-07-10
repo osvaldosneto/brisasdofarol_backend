@@ -16,8 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tb_clientes")
 public class Cliente implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +28,8 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
+	
+	//@Column(unique = true)
 	private String email;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "cliente")

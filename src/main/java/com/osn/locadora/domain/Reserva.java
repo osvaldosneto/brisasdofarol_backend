@@ -9,12 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.osn.locadora.domain.enums.TipoIntermedio;
 import com.osn.locadora.domain.enums.TipoLimpeza;
 
 @Entity
+@Table(name = "tb_reservas")
 public class Reserva implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,6 +57,7 @@ public class Reserva implements Serializable {
 		this.tipoIntermedio = tipoIntermedio.getCod();
 		this.desconto = desconto;
 		this.tipoLimpeza = tipoLimpeza.getCod();
+
 	}
 
 	public LocalDate getNow() {

@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.osn.locadora.domain.Reserva;
 import com.osn.locadora.dto.ReservaDTO;
 import com.osn.locadora.dto.ReservaNewDTO;
+import com.osn.locadora.dto.ReservaUpdateDTO;
 import com.osn.locadora.services.ReservaService;
 
 @RestController
@@ -76,6 +77,20 @@ public class ReservaResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Void> edit(@PathVariable Long id) {
+		service.updateHospedagensDiarias(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@Valid @RequestBody ReservaUpdateDTO objUpdateDTO, @PathVariable Long id) {
+		Reserva obj = service.fromNewDTOUpdate(objUpdateDTO, id);
+		obj.setId(id);
+		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 

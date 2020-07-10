@@ -1,5 +1,6 @@
 package com.osn.locadora.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,8 @@ public class HospedagemService {
 		updated.setTaxaLimpeza(obj.getTaxaLimpeza());
 		updated.setValorDiaria(obj.getValorDiaria());
 		updated.setValorHospedeExtra(obj.getValorHospedeExtra());
+		updated.setNome(obj.getNome());
+		updated.setEndereco(obj.getEndereco());
 		return repo.save(updated);
 	}
 
@@ -87,6 +90,12 @@ public class HospedagemService {
 			throw new DataIntegrityException(
 					"Não é possível exclir o cliente, verifique se existe dependencia em anexo.");
 		}
+	}
+	
+	@Transactional
+	public void atualizarLista(List<LocalDate> lista, Hospedagem hospedagem) {
+		hospedagem.getListaDatas().removeAll(lista);
+		repo.save(hospedagem);
 	}
 	
 	
