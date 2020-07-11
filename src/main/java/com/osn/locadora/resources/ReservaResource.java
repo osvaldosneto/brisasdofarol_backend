@@ -88,6 +88,7 @@ public class ReservaResource {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ReservaUpdateDTO objUpdateDTO, @PathVariable Long id) {
+		System.out.println("Id resource : " + id);
 		Reserva obj = service.fromNewDTOUpdate(objUpdateDTO, id);
 		obj.setId(id);
 		obj = service.update(obj);

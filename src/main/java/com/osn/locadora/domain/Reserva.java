@@ -1,7 +1,10 @@
 package com.osn.locadora.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -171,6 +174,54 @@ public class Reserva implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		builder.append("Olá " + cliente.getNome() + "!!! \n");
+		builder.append("\n");
+		builder.append("Aqui é o Osvaldo e a Rafa, anfitriões das casinhas brisas do farol, "
+				+ "esta é uma mensagem automática de confirmação da sua reserva.");
+		builder.append("\n");
+		builder.append("\n");
+		// local
+		if (tipoIntermedio == 0) {
+
+			builder.append("Hospedagem : " + hospedagem.getNome());
+			builder.append("\n");
+			builder.append("Data CheckIn : " + checkIn.format(formatter));
+			builder.append("\n");
+			builder.append("Data CheckOut : " + checkOut.format(formatter));
+			builder.append("\n");
+			builder.append("Número de Hóspedes : " + numeroHospedes);
+			builder.append("\n");
+			builder.append("Subtotal : " + nf.format(total + desconto));
+			builder.append("\n");
+			builder.append("Desconto : " + nf.format(desconto));
+			builder.append("\n");
+			builder.append("Total : " + nf.format(total));
+			builder.append("\n");
+
+		} else {
+
+			builder.append("Hospedagem :" + hospedagem.getNome());
+			builder.append("\n");
+			builder.append("Data CheckIn : " + checkIn.format(formatter));
+			builder.append("\n");
+			builder.append("Data CheckOut : " + checkOut.format(formatter));
+			builder.append("\n");
+			builder.append("Número de Hóspedes :" + numeroHospedes);
+			builder.append("\n");
+		}
+		builder.append("\n");
+		builder.append(
+				"Qualquer dúvida  estamos à disposição pelo email ou telefones (48) 99175 5501 / (48) 991525502.");
+
+		return builder.toString();
 	}
 
 }

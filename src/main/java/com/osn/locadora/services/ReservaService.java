@@ -40,6 +40,9 @@ public class ReservaService {
 
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	public Reserva find(Long id) {
 		Optional<Reserva> obj = repo.findById(id);
@@ -77,11 +80,14 @@ public class ReservaService {
 		obj.setTotal(this.calculoTotal(obj));
 		hospedagem.getReservas().add(obj);
 		cliente.getReservas().add(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 
 	public Reserva fromNewDTOUpdate(@Valid ReservaUpdateDTO objUpdateDTO, Long id) {
+		System.out.println("Id :" + id);
 		Reserva obj = find(id);
+		
 		Hospedagem hospedagem = obj.getHospedagem();
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		for (LocalDate ld = LocalDate.parse(objUpdateDTO.getCheckIn(), formatador); ld
@@ -97,6 +103,7 @@ public class ReservaService {
 		obj.setTipoIntermedio(TipoIntermedio.toEnum(objUpdateDTO.getTipoIntermedio()));
 		obj.setTipoLimpeza(TipoLimpeza.toEnum(objUpdateDTO.getTipoLimpeza()));
 		obj.setTotal(this.calculoTotal(obj));
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 
@@ -117,6 +124,7 @@ public class ReservaService {
 		hospedagem.getReservas().add(obj);
 		obj.setCliente(cliente);
 		cliente.getReservas().add(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 

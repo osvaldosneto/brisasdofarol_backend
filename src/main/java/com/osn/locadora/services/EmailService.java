@@ -1,0 +1,13 @@
+package com.osn.locadora.services;
+
+import org.springframework.mail.SimpleMailMessage;
+
+import com.osn.locadora.domain.Reserva;
+
+public interface EmailService {
+
+	void sendOrderConfirmationEmail(Reserva obj);
+	
+	void sendEmail(SimpleMailMessage msg);
+	
+}
