@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.osn.locadora.domain.enums.Perfil;
 
 @Entity
 @Table(name = "tb_clientes")
@@ -28,8 +33,8 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	
-	//@Column(unique = true)
+
+	// @Column(unique = true)
 	private String email;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "cliente")
@@ -43,8 +48,15 @@ public class Cliente implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
 	private List<Reserva> reservas = new ArrayList<>();
 
-	public Cliente() {
+	@JsonIgnore
+	private String senha;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "Perfis")
+	private Set<Integer> perfis = new HashSet<>();
+
+	public Cliente() {
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Cliente(String nome, String email, Endereco endereco) {
@@ -52,6 +64,23 @@ public class Cliente implements Serializable {
 		this.nome = nome;
 		this.email = email;
 		this.endereco = endereco;
+		addPerfil(Perfil.CLIENTE);
+	}
+
+	public Set<Perfil> getPerfis() {
+		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+	}
+
+	public void addPerfil(Perfil perfil) {
+		perfis.add(perfil.getCod());
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Long getId() {

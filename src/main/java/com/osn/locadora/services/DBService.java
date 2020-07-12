@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import com.osn.locadora.domain.Endereco;
 import com.osn.locadora.domain.Estado;
 import com.osn.locadora.domain.Hospedagem;
 import com.osn.locadora.domain.Reserva;
+import com.osn.locadora.domain.enums.Perfil;
 import com.osn.locadora.domain.enums.TipoIntermedio;
 import com.osn.locadora.domain.enums.TipoLimpeza;
 import com.osn.locadora.repository.CidadeRepository;
@@ -43,7 +45,10 @@ public class DBService {
 
 	@Autowired
 	ReservaRepository reservaRepo;
-	
+
+	@Autowired
+	BCryptPasswordEncoder pe;
+
 	@Transactional
 	public void instanciatedTestDatabase() {
 
@@ -95,7 +100,8 @@ public class DBService {
 		Endereco end10 = new Endereco("Rua Paulista", "100", "casa", "Campinas", "88750-000", c7);
 		Endereco end11 = new Endereco("Rua Sete", "654", "casa", "Centro", "88750-000", c7);
 		Endereco end12 = new Endereco("Rua Oito", "1543", "casa", "Centro", "88750-000", c8);
-
+		Endereco end13 = new Endereco("Rua Jaguaruna", "444", "casa", "Centro", "88750-000", c5);
+		
 		enderecoRepo.save(end1);
 		enderecoRepo.save(end2);
 		enderecoRepo.save(end3);
@@ -108,6 +114,7 @@ public class DBService {
 		enderecoRepo.save(end10);
 		enderecoRepo.save(end11);
 		enderecoRepo.save(end12);
+		enderecoRepo.save(end13);
 
 		Hospedagem h1 = new Hospedagem("Nordeste", 4, 100.00, 50.00, 50.00, end1, null);
 		Hospedagem h2 = new Hospedagem("Suli", 4, 100.00, 50.00, 50.00, end2, null);
@@ -144,7 +151,10 @@ public class DBService {
 		Cliente cli10 = new Cliente("Pinto Silva", "pinto@ymail.com", end12);
 		cli10.getTelefones().add("3214-5555");
 		end12.setCliente(cli10);
-
+		Cliente cli11 = new Cliente("Osvaldo Silva", "osvaldosneto@hotmail.com", end13);
+		cli11.getTelefones().add("3333-5555");
+		end13.setCliente(cli10);
+		
 		LocalDate d1 = LocalDate.of(2020, 1, 8);
 		LocalDate d2 = LocalDate.of(2020, 1, 10);
 		LocalDate d3 = LocalDate.of(2020, 2, 8);
@@ -258,6 +268,9 @@ public class DBService {
 
 		h1.setReservas(listaH1);
 		h2.setReservas(listaH2);
+		
+		cli11.setSenha(pe.encode("12345"));
+		cli11.addPerfil(Perfil.ADMIN);
 
 		clieneRepo.save(cli1);
 		clieneRepo.save(cli2);
@@ -269,6 +282,7 @@ public class DBService {
 		clieneRepo.save(cli8);
 		clieneRepo.save(cli9);
 		clieneRepo.save(cli10);
+		clieneRepo.save(cli11);
 
 		reservaRepo.save(res1);
 		reservaRepo.save(res2);
