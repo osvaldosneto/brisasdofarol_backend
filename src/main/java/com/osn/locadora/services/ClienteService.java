@@ -43,7 +43,7 @@ public class ClienteService {
 	}
 
 	public List<Cliente> findAll() {
-		return repo.findAll();
+		return repo.findAllByOrderByNomeAsc();
 	}
 
 	public Cliente fromNewDTO(ClienteNewDTO objNewDTO) {

@@ -1,6 +1,8 @@
 package com.osn.locadora.resources;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import com.osn.locadora.domain.Reserva;
 import com.osn.locadora.dto.ReservaDTO;
 import com.osn.locadora.dto.ReservaNewDTO;
 import com.osn.locadora.dto.ReservaUpdateDTO;
+import com.osn.locadora.repository.ReservaRepository;
 import com.osn.locadora.services.ReservaService;
 
 @RestController
@@ -29,6 +32,9 @@ public class ReservaResource {
 
 	@Autowired
 	private ReservaService service;
+
+	@Autowired
+	private ReservaRepository repo;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ReservaDTO>> findAll() {
@@ -74,12 +80,23 @@ public class ReservaResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 
+	@RequestMapping(value = "/entredatas", method = RequestMethod.GET)
+	public ResponseEntity<List<Reserva>> filtro(@RequestParam(value = "dia1", defaultValue = "01/01/2019") String dia1,
+			@RequestParam(value = "dia2") String dia2) {
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate date1 = LocalDate.parse(dia1, formatador);
+		LocalDate date2 = LocalDate.parse(dia2, formatador);
+
+		List<Reserva> lista = repo.findByCreatedDateBetween(date1, date2);
+		return ResponseEntity.ok().body(lista);
+	}
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Void> edit(@PathVariable Long id) {
 		service.updateHospedagensDiarias(id);
