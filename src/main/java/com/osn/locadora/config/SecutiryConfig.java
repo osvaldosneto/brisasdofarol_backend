@@ -30,14 +30,10 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JWTUtil jwtUtil;
 
-	//private static final String[] PUBLIC_MATCHERS = { "/estados/**", "/clientes/**", "/hospedagens/**",
-	//		"/custos/**", "/reservas/**", "/auth/**", "/login/**"};
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
-	//	.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
 		.anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
