@@ -18,7 +18,7 @@ public class DevConfig {
 
 	@Bean
 	public boolean instantiatedDatabase(){
-		dbService.instanciatedTestDatabase();
+		dbService.instanciatedDevDatabase();
 		return true;
 	}
 	

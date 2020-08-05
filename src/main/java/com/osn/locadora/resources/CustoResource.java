@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -57,5 +58,13 @@ public class CustoResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
-
+	
+	@RequestMapping(value = "/filtro", method = RequestMethod.GET)
+	public ResponseEntity<List<Custos>> filtro(@RequestParam(value = "dia1", defaultValue = "2019-01-01") String dia1,
+			@RequestParam(value = "dia2", defaultValue = "2050-12-31") String dia2,
+			@RequestParam(value = "nome", defaultValue = "") String nome) {
+		List<Custos> lista = service.findByDateAndName(dia1, dia2, nome);
+		return ResponseEntity.ok().body(lista);
+	}
+	
 }

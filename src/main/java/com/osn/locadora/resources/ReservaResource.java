@@ -46,6 +46,12 @@ public class ReservaResource {
 		}
 		return ResponseEntity.ok().body(listaDTO);
 	}
+	
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public ResponseEntity<List<Reserva>> findAllReservas() {
+		List<Reserva> lista = service.findAll();
+		return ResponseEntity.ok().body(lista);
+	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Long id) {
@@ -53,7 +59,7 @@ public class ReservaResource {
 		return ResponseEntity.ok().body(objDTO);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/nova", method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ReservaNewDTO objDTO) {
 		Reserva obj = service.fromNewDTO(objDTO);
 		obj = service.insert(obj);
@@ -61,7 +67,7 @@ public class ReservaResource {
 		return ResponseEntity.created(uri).build();
 	}
 
-	@RequestMapping(value = "/nova", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insertNova(@Valid @RequestBody ReservaDTO objDTO) {
 		Reserva obj = service.fromDTO(objDTO);
 		obj = service.insertNova(obj);
@@ -81,9 +87,9 @@ public class ReservaResource {
 	}
 
 	@RequestMapping(value = "/entredatas", method = RequestMethod.GET)
-	public ResponseEntity<List<Reserva>> filtro(@RequestParam(value = "dia1", defaultValue = "01/01/2019") String dia1,
-			@RequestParam(value = "dia2") String dia2) {
-		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	public ResponseEntity<List<Reserva>> filtro(@RequestParam(value = "dia1", defaultValue = "2019-01-01") String dia1,
+			@RequestParam(value = "dia2", defaultValue = "2050-12-31") String dia2) {
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate date1 = LocalDate.parse(dia1, formatador);
 		LocalDate date2 = LocalDate.parse(dia2, formatador);
 
@@ -111,5 +117,18 @@ public class ReservaResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
-
+	
+	@RequestMapping(value = "/filtrodata", method = RequestMethod.GET)
+	public ResponseEntity<List<Reserva>> filtroReserva(@RequestParam(value = "data", defaultValue = "") String data) {
+		List<Reserva> lista = service.findByDate(data);	
+		return ResponseEntity.ok().body(lista);
+	}
+	
+	@RequestMapping(value = "/filtrohospedagem", method = RequestMethod.GET)
+	public ResponseEntity<List<Reserva>> filtroReservaHos(@RequestParam(value = "idHospedagem", defaultValue = "%") String idHospedagem,
+			@RequestParam(value = "idCliente", defaultValue = "%") String idCliente) {
+		List<Reserva> lista = service.findByHospedagemCliente(idHospedagem, idCliente);	
+		return ResponseEntity.ok().body(lista);
+	}
+	
 }

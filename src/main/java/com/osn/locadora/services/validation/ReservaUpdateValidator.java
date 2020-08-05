@@ -27,7 +27,7 @@ public class ReservaUpdateValidator implements ConstraintValidator<ReservaUpdate
 	@Override
 	public boolean isValid(ReservaUpdateDTO objDto, ConstraintValidatorContext context) {
 
-		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate checkIn = LocalDate.parse(objDto.getCheckIn(), formatador);
 		LocalDate checkOut = LocalDate.parse(objDto.getCheckOut(), formatador);
 		

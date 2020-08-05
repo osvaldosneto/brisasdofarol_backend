@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.osn.locadora.domain.enums.TipoIntermedio;
 import com.osn.locadora.domain.enums.TipoLimpeza;
 
@@ -39,11 +38,10 @@ public class Reserva implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "hospedagens_id")
-	@JsonIgnore
 	private Hospedagem hospedagem;
 
 	@ManyToOne
-	@JsonIgnore
+	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 
 	public Reserva() {

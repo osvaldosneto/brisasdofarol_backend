@@ -89,7 +89,7 @@ public class ReservaService {
 		Reserva obj = find(id);
 		
 		Hospedagem hospedagem = obj.getHospedagem();
-		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		for (LocalDate ld = LocalDate.parse(objUpdateDTO.getCheckIn(), formatador); ld
 				.isBefore(LocalDate.parse(objUpdateDTO.getCheckOut(), formatador)); ld = ld.plusDays(1)) {
 			hospedagem.getListaDatas().add(ld);
@@ -108,7 +108,7 @@ public class ReservaService {
 	}
 
 	public Reserva fromDTO(@Valid ReservaDTO objDTO) {	
-		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		Cliente cliente = clienteService.find(objDTO.getIdCliente());
 		Hospedagem hospedagem = hospedagemService.find(objDTO.getIdHospedagem());
 		for (LocalDate ld = LocalDate.parse(objDTO.getCheckIn(), formatador); ld
@@ -203,5 +203,25 @@ public class ReservaService {
 		}
 		hospedagemService.atualizarLista(listaRemover, obj.getHospedagem());
 	}
+	
+	public List<Reserva> findByDate(String date) {
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate data = LocalDate.parse(date, formatador);
+		return repo.findByDate(data);
+	}
 
+	public List<Reserva> findByHospedagemCliente(String idHospedagem, String idCliente) {	
+		if(!"%".equals(idHospedagem) && !"%".equals(idCliente)) {
+			return repo.findByHospedagemCliente(Long.parseLong(idCliente), Long.parseLong(idHospedagem));
+		} else if("%".equals(idHospedagem) && "%".equals(idCliente)){
+			return this.findAll();
+		} else if("%".equals(idHospedagem) && !"%".equals(idCliente)){
+			System.out.println("Find by cliente!!" + Long.parseLong(idCliente));
+			return repo.findBycliente(Long.parseLong(idCliente));
+		} else {
+			return repo.findByhospedagem(Long.parseLong(idHospedagem));
+		}
+		
+	}
+	
 }

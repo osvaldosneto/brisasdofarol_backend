@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.osn.locadora.domain.Cliente;
 import com.osn.locadora.dto.ClienteDTO;
 import com.osn.locadora.dto.ClienteNewDTO;
+import com.osn.locadora.dto.MsgDTO;
 import com.osn.locadora.services.ClienteService;
 
 @RestController
@@ -60,12 +61,24 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@RequestMapping(value = "/deletemail/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Void> deletemail(@PathVariable Long id) {
+		service.deletemail(id);
+		return ResponseEntity.noContent().build();
+	}
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteNewDTO objNewDTO, @PathVariable Long id) {
 		Cliente obj = service.fromDTO(objNewDTO, id);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/deletemail", method = RequestMethod.GET)
+	public ResponseEntity<List<Cliente>> findByNome(@RequestParam(value = "nome") String nome) {
+		List<Cliente> lista = service.findAllByNome(nome);
+		return ResponseEntity.ok().body(lista);
 	}
 	
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
@@ -77,6 +90,18 @@ public class ClienteResource {
 		Page<Cliente> list = service.findPage(page, linesPerPage, orderBy, direction);
 		Page<ClienteDTO> listDto = list.map(obj -> new ClienteDTO(obj));
 		return ResponseEntity.ok().body(listDto);
+	}
+	
+	@RequestMapping(value = "/sendallemail", method = RequestMethod.POST)
+	public ResponseEntity<Void> sendallemail(@Valid @RequestBody MsgDTO objDTO) {
+		service.sendEmailAll(objDTO);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/sendemail", method = RequestMethod.POST)
+	public ResponseEntity<Void> sendemail(@Valid @RequestBody MsgDTO objDTO) {
+		service.sendEmail(objDTO);
+		return ResponseEntity.noContent().build();
 	}
 
 }

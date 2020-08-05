@@ -20,6 +20,7 @@ import com.osn.locadora.domain.Cliente;
 import com.osn.locadora.domain.Endereco;
 import com.osn.locadora.dto.ClienteDTO;
 import com.osn.locadora.dto.ClienteNewDTO;
+import com.osn.locadora.dto.MsgDTO;
 import com.osn.locadora.repository.ClienteRepository;
 import com.osn.locadora.repository.EnderecoRepository;
 import com.osn.locadora.services.exceptions.DataIntegrityException;
@@ -35,6 +36,9 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository endRepo;
+	
+	@Autowired
+	private EmailService emailService;
 
 	public Cliente find(Long id) {
 		Optional<Cliente> obj = repo.findById(id);
@@ -121,7 +125,6 @@ public class ClienteService {
 	}
 
 	public Cliente update(Cliente obj) {
-		
 		obj.setId(obj.getId());
 		obj = repo.save(obj);
 		endRepo.save(obj.getEndereco());
@@ -131,6 +134,28 @@ public class ClienteService {
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
+	}
+	
+	public List<Cliente> findAllByNome(String nome){
+		return repo.findAllClienteByNome(nome);
+	}
+
+	public void deletemail(Long id) {
+		Cliente obj = find(id);
+		obj.setEmail("nonononono@noononono.com");
+		this.update(obj);
+	}
+
+	public void sendEmailAll(MsgDTO objDTO) {
+		List<Cliente> listaCliente = findAll();
+		for(int i=0; i<listaCliente.size(); i++) {
+			emailService.sendEmailMsgClient(listaCliente.get(i), objDTO.getMsg());
+		}
+	}
+
+	public void sendEmail(@Valid MsgDTO objDTO) {
+		Cliente cliente = find(objDTO.getId());
+		emailService.sendEmailMsgClient(cliente, objDTO.getMsg());
 	}
 
 }

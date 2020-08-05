@@ -24,15 +24,19 @@ public class Custos implements Serializable {
 	private LocalDate dataPagamento;
 	private double valor;
 
+	private String descricao;
+	
 	public Custos() {
-
+		
 	}
 
-	public Custos(String nome, LocalDate now, LocalDate dataPagamento, double valor) {
+	public Custos(String nome, LocalDate now, LocalDate dataPagamento, double valor, String descricao) {
 		super();
 		this.nome = nome;
 		this.now = LocalDate.now();
 		this.dataPagamento = dataPagamento;
+		this.descricao = descricao;
+		this.valor = valor;
 	}
 
 	public Long getId() {
@@ -73,6 +77,14 @@ public class Custos implements Serializable {
 
 	public void setDataPagamento(LocalDate dataPagamento) {
 		this.dataPagamento = dataPagamento;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override

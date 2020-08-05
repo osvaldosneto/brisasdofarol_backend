@@ -20,6 +20,8 @@ public class CustoDTO implements Serializable {
 	@NotNull
 	private double valor;
 
+	private String descricao;
+
 	public CustoDTO() {
 
 	}
@@ -29,6 +31,7 @@ public class CustoDTO implements Serializable {
 		this.now = obj.getNow().toString();
 		this.valor = obj.getValor();
 		this.dataPagamento = obj.getDataPagamento().toString();
+		this.descricao = obj.getDescricao();
 	}
 
 	public Long getId() {
@@ -69,6 +72,14 @@ public class CustoDTO implements Serializable {
 
 	public void setDataPagamento(String dataPagamento) {
 		this.dataPagamento = dataPagamento;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 }

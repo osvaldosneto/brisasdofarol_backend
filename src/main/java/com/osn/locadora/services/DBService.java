@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.osn.locadora.domain.Cidade;
 import com.osn.locadora.domain.Cliente;
+import com.osn.locadora.domain.Custos;
 import com.osn.locadora.domain.Endereco;
 import com.osn.locadora.domain.Estado;
 import com.osn.locadora.domain.Hospedagem;
@@ -20,6 +21,7 @@ import com.osn.locadora.domain.enums.TipoIntermedio;
 import com.osn.locadora.domain.enums.TipoLimpeza;
 import com.osn.locadora.repository.CidadeRepository;
 import com.osn.locadora.repository.ClienteRepository;
+import com.osn.locadora.repository.CustosRepository;
 import com.osn.locadora.repository.EnderecoRepository;
 import com.osn.locadora.repository.EstadoRepository;
 import com.osn.locadora.repository.HospedagemRepository;
@@ -48,6 +50,9 @@ public class DBService {
 
 	@Autowired
 	BCryptPasswordEncoder pe;
+	
+	@Autowired
+	CustosRepository custoRepo;
 
 	@Transactional
 	public void instanciatedTestDatabase() {
@@ -121,16 +126,16 @@ public class DBService {
 		end1.setHospedagem(h1);
 		end2.setHospedagem(h2);
 
-		Cliente cli1 = new Cliente("João Silva", "joao@ymail.com", end3);
+		Cliente cli1 = new Cliente("João Silva", "rafaaguiar@ymail.com", end3);
 		cli1.getTelefones().add("9175-5501");
 		end3.setCliente(cli1);
-		Cliente cli2 = new Cliente("Maria Silva", "maria@ymail.com", end4);
+		Cliente cli2 = new Cliente("Maria Silva", "rafaaguiar.29.07@gmail.com", end4);
 		cli2.getTelefones().add("8876-5555");
 		end4.setCliente(cli2);
-		Cliente cli3 = new Cliente("Jorge Silva", "jorge@ymail.com", end5);
+		Cliente cli3 = new Cliente("Jorge Silva", "osvaldosneto1983@gmail.com", end5);
 		cli3.getTelefones().add("3624-5555");
 		end5.setCliente(cli3);
-		Cliente cli4 = new Cliente("Tereza Silva", "tereza@ymail.com", end6);
+		Cliente cli4 = new Cliente("Tereza Silva", "osvaldo.sn@aluno.ifsc.edu.br", end6);
 		cli4.getTelefones().add("9175-5555");
 		end6.setCliente(cli4);
 		Cliente cli5 = new Cliente("Antonio Silva", "antonio@ymail.com", end7);
@@ -153,13 +158,21 @@ public class DBService {
 		end12.setCliente(cli10);
 		Cliente cli11 = new Cliente("Osvaldo Silva", "osvaldosneto@hotmail.com", end13);
 		cli11.getTelefones().add("3333-5555");
-		end13.setCliente(cli10);
+		end13.setCliente(cli11);
 		
 		LocalDate d1 = LocalDate.of(2020, 1, 8);
 		LocalDate d2 = LocalDate.of(2020, 1, 10);
 		LocalDate d3 = LocalDate.of(2020, 2, 8);
 		LocalDate d4 = LocalDate.of(2020, 3, 8);
 		LocalDate d5 = LocalDate.of(2020, 3, 12);
+		
+		for (LocalDate ld = d1; ld.isBefore(d2); ld = ld.plusDays(1)) {
+			h1.getListaDatas().add(ld);
+		}
+		
+		for (LocalDate ld = d1; ld.isBefore(d2); ld = ld.plusDays(1)) {
+			h2.getListaDatas().add(ld);
+		}
 
 		Reserva res1 = new Reserva(d1, d2, 2, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
 		Reserva res2 = new Reserva(d1, d2, 1, TipoIntermedio.AIRBNB, 0.00, TipoLimpeza.SIM);
@@ -305,7 +318,33 @@ public class DBService {
 
 		hospedagemRepo.save(h1);
 		hospedagemRepo.save(h2);
+		
+		Custos cu1 = new Custos("Energia", LocalDate.now(), d1, 123.43, null);
+		Custos cu2 = new Custos("Água", LocalDate.now(), d2, 245.98, null);
+		Custos cu3 = new Custos("Energia", LocalDate.now(), d3, 154.98, null);
+		Custos cu4 = new Custos("Internet", LocalDate.now(), d4, 123.43, null);
+		Custos cu5 = new Custos("Energia", LocalDate.now(), d5, 45.503, null);
+		Custos cu6 = new Custos("Energia", LocalDate.now(), d5, 143.43, null);
+		Custos cu7 = new Custos("Internet", LocalDate.now(), d1, 3.43, null);
+		
+		custoRepo.save(cu1);
+		custoRepo.save(cu2);
+		custoRepo.save(cu3);
+		custoRepo.save(cu4);
+		custoRepo.save(cu5);
+		custoRepo.save(cu6);
+		custoRepo.save(cu7);
 
+	}
+
+	public void instanciatedDevDatabase() {
+		
+		Cliente cli1 = new Cliente("Osvaldo Silva", "osvaldosneto@hotmail.com", null);
+		cli1.setSenha(pe.encode("12345"));
+		cli1.addPerfil(Perfil.ADMIN);
+
+		clieneRepo.save(cli1);
+		
 	}
 
 }

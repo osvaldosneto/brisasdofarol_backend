@@ -46,6 +46,7 @@ public class Cliente implements Serializable {
 	private Set<String> telefones = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
+	@JsonIgnore
 	private List<Reserva> reservas = new ArrayList<>();
 
 	@JsonIgnore

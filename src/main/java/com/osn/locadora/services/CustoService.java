@@ -48,13 +48,24 @@ public class CustoService {
 
 	public Custos fromDTO(CustoDTO objDTO) {
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		Custos obj = new Custos(objDTO.getNome(), null, LocalDate.parse(objDTO.getDataPagamento(), formatador), objDTO.getValor());
+		Custos obj = new Custos(objDTO.getNome(), null, LocalDate.parse(objDTO.getDataPagamento(), formatador), objDTO.getValor(), objDTO.getDescricao());
 		return obj;
 	}
 
 	public Custos update(Custos obj) {
 		obj.setId(obj.getId());
 		return repo.save(obj);
+	}
+
+	public List<Custos> findByDateAndName(String dia1, String dia2, String nome) {
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate date1 = LocalDate.parse(dia1, formatador);
+		LocalDate date2 = LocalDate.parse(dia2, formatador);
+		if("".equals(nome)) {
+			return repo.findByDate(date1, date2);
+		}else {
+			return repo.findByDateAndName(date1, date2, nome);
+		}	
 	}
 
 }
