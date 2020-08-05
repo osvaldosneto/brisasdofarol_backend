@@ -15,10 +15,6 @@
 	<name>locadora</name>
 	<description>Locação de imóveis</description>
 
-	<properties>
-		<java.version>14</java.version>
-	</properties>
-
 	<dependencies>
 
 		<dependency>
