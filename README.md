@@ -5,7 +5,7 @@ Para desenvolver este sistema foi utilizado o conceito de arquitetura em camadas
 Segue abaixo diagrama das camadas.
 
 <div>
-  <img src="diagrama.jpg"/>
+  <img src="camadas.png"/>
   <h4>Tela LogIn</h4>
 </div>
 
