@@ -6,7 +6,6 @@ Segue abaixo diagrama das camadas.
 
 <div>
   <img src="camadas.png"/>
-  <h4>Tela LogIn</h4>
 </div>
 
 Todo a comunicação com o nosso frontEnd será entregue via este sistema. Nossa camada de entrada é chamada de Controler, onde nela recebemos parâmetros passados por linha de comando ou como objeto para então poder tomar as decisões necessárias, nesta camada temos as atividades de Rest sendo aplicadas.
