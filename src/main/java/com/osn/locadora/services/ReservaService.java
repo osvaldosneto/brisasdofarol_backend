@@ -156,6 +156,7 @@ public class ReservaService {
 			for (LocalDate ld = obj.getCheckIn(); ld.isBefore(obj.getCheckOut()); ld = ld.plusDays(1)) {
 				obj.getHospedagem().getListaDatas().remove(ld);
 			}
+			hospedagemService.update(obj.getHospedagem());
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException(
