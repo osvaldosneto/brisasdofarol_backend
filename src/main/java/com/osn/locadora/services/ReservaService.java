@@ -85,7 +85,6 @@ public class ReservaService {
 	}
 
 	public Reserva fromNewDTOUpdate(@Valid ReservaUpdateDTO objUpdateDTO, Long id) {
-		System.out.println("Id :" + id);
 		Reserva obj = find(id);
 		
 		Hospedagem hospedagem = obj.getHospedagem();
@@ -152,6 +151,11 @@ public class ReservaService {
 	public void delete(Long id) {
 		find(id);
 		try {
+			Reserva obj = this.find(id);
+			
+			for (LocalDate ld = obj.getCheckIn(); ld.isBefore(obj.getCheckOut()); ld = ld.plusDays(1)) {
+				obj.getHospedagem().getListaDatas().remove(ld);
+			}
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException(
