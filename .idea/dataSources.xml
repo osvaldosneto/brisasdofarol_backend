@@ -7,11 +7,11 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/loca</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="mysql://bd992773ab1d05:c3040d33@us-cdbr-east-02.cleardb.com/heroku_7515ca5671b3992?reconnect=true" uuid="285c82b3-d95f-467d-8a2a-f097ef733876">
+    <data-source source="LOCAL" name="jdbc:mysql://@us-cdbr-east-02.cleardb.com" uuid="5da06652-4f29-4e05-b4bd-7340d3e9bacd">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>mysql://bd992773ab1d05:c3040d33@us-cdbr-east-02.cleardb.com/heroku_7515ca5671b3992?reconnect=true</jdbc-url>
+      <jdbc-url>jdbc:mysql://@us-cdbr-east-02.cleardb.com</jdbc-url>
     </data-source>
   </component>
 </project>
