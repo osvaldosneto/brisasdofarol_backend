@@ -31,7 +31,7 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JWTUtil jwtUtil;
 
-	private static final String[] PUBLIC_MATCHERS = { "/clientes/**", "/hospedagens/**", "/reservas/**" };
+	private static final String[] PUBLIC_MATCHERS = { "/clientes/**", "/hospedagens/**", "/reservas/**", "/jardim/**" };
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {

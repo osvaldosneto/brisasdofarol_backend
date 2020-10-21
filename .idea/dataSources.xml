@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="loca@localhost" uuid="5c6e3ce1-6745-4976-bb27-8be0831e3267">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/loca</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="mysql://bd992773ab1d05:c3040d33@us-cdbr-east-02.cleardb.com/heroku_7515ca5671b3992?reconnect=true" uuid="285c82b3-d95f-467d-8a2a-f097ef733876">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>mysql://bd992773ab1d05:c3040d33@us-cdbr-east-02.cleardb.com/heroku_7515ca5671b3992?reconnect=true</jdbc-url>
+    </data-source>
+  </component>
+</project>

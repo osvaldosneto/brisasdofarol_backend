@@ -282,7 +282,7 @@ public class DBService {
 		h1.setReservas(listaH1);
 		h2.setReservas(listaH2);
 		
-		cli11.setSenha(pe.encode("12345"));
+		cli11.setSenha(pe.encode("123"));
 		cli11.addPerfil(Perfil.ADMIN);
 
 		clieneRepo.save(cli1);
@@ -339,11 +339,11 @@ public class DBService {
 
 	public void instanciatedDevDatabase() {
 		
-		Cliente cli1 = new Cliente("Osvaldo Silva", "osvaldosneto@hotmail.com", null);
-		cli1.setSenha(pe.encode("12345"));
-		cli1.addPerfil(Perfil.ADMIN);
-
-		clieneRepo.save(cli1);
+//		Cliente cli1 = new Cliente("Osvaldo Silva", "osvaldosneto@hotmail.com", null);
+//		cli1.setSenha(pe.encode("12345"));
+//		cli1.addPerfil(Perfil.ADMIN);
+//
+//		clieneRepo.save(cli1);
 		
 	}
 

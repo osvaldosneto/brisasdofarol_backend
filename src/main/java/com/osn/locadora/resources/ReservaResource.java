@@ -92,7 +92,8 @@ public class ReservaResource {
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate date1 = LocalDate.parse(dia1, formatador);
 		LocalDate date2 = LocalDate.parse(dia2, formatador);
-
+		System.out.println("entre datas " + dia1);
+		System.out.println("entre datas " + dia2);
 		List<Reserva> lista = repo.findByCreatedDateBetween(date1, date2);
 		return ResponseEntity.ok().body(lista);
 	}
