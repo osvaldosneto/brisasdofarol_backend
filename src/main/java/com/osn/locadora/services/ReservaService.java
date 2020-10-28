@@ -221,7 +221,6 @@ public class ReservaService {
 		} else if("%".equals(idHospedagem) && "%".equals(idCliente)){
 			return this.findAll();
 		} else if("%".equals(idHospedagem) && !"%".equals(idCliente)){
-			System.out.println("Find by cliente!!" + Long.parseLong(idCliente));
 			return repo.findBycliente(Long.parseLong(idCliente));
 		} else {
 			return repo.findByhospedagem(Long.parseLong(idHospedagem));
